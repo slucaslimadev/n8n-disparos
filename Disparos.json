@@ -1,0 +1,488 @@
+{
+  "name": "Disparos Lumin",
+  "nodes": [
+    {
+      "parameters": {
+        "resource": "messages-api",
+        "instanceName": "LuminTech",
+        "remoteJid": "={{ $json.data[0].number }}",
+        "messageText": "=Olá, {{ $('Loop Over Items').item.json.nome }}! Tudo bem? Vi sua empresa no Google e notei que trabalham com consignado.\n\nCriei uma Inteligência Artificial para WhatsApp que atende seus clientes na hora, tira dúvidas baseada nas regras da sua loja e puxa simulações direto da sua planilha.\n\nO diferencial: se o cliente parar de responder por 5 minutos, a IA faz o follow-up sozinha. Quando ele topa, ela pede os documentos e já avisa seu vendedor e supervisor.\n\nFaz sentido automatizar seu atendimento para não perder vendas que esfriam? Posso te mandar um vídeo de 1 minuto mostrando na prática?",
+        "options_message": {}
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        304,
+        -128
+      ],
+      "id": "d8a70f12-8fb1-4d55-b04c-2c3e3d018277",
+      "name": "Enviar texto",
+      "credentials": {
+        "evolutionApi": {
+          "id": "kTQQN6By6fYaxzCH",
+          "name": "Evolution account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -368,
+        208
+      ],
+      "id": "5d399aa7-94d7-4254-b5c5-e6484388698a",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Define o tempo mínimo e máximo em segundos\nconst min = 30;\nconst max = 90;\n\n// Calcula o tempo aleatório em milissegundos\nconst delayMs = Math.floor(Math.random() * (max - min + 1) + min) * 1000;\n\n// Pausa a execução do nó pelo tempo calculado\nawait new Promise(resolve => setTimeout(resolve, delayMs));\n\n// Retorna os mesmos dados exatos para o próximo nó continuar o loop\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        752,
+        48
+      ],
+      "id": "c467475f-00a5-4f88-ab5a-1585ef5915cc",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1Vhzmu0LonkzZAvAaP-UbYiqLqgy-nms2lgYi3K_jh14",
+          "mode": "list",
+          "cachedResultName": "Leads_Consignado",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Vhzmu0LonkzZAvAaP-UbYiqLqgy-nms2lgYi3K_jh14/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Página1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Vhzmu0LonkzZAvAaP-UbYiqLqgy-nms2lgYi3K_jh14/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "envio",
+              "lookupValue": "PENDENTE"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -592,
+        208
+      ],
+      "id": "8c335214-3303-4df2-8419-faf17ba274cd",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "s3WG0vaKqNmkRAml",
+          "name": "Quattro"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1Vhzmu0LonkzZAvAaP-UbYiqLqgy-nms2lgYi3K_jh14",
+          "mode": "list",
+          "cachedResultName": "Leads_Consignado",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Vhzmu0LonkzZAvAaP-UbYiqLqgy-nms2lgYi3K_jh14/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Página1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Vhzmu0LonkzZAvAaP-UbYiqLqgy-nms2lgYi3K_jh14/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "numero": "={{ $('Loop Over Items').item.json.numero }}",
+            "envio": "DISPARADO"
+          },
+          "matchingColumns": [
+            "numero"
+          ],
+          "schema": [
+            {
+              "id": "nome",
+              "displayName": "nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "numero",
+              "displayName": "numero",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "envio",
+              "displayName": "envio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        528,
+        -128
+      ],
+      "id": "bd0ea412-7aee-47f4-8ccb-96af81f2fa04",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "s3WG0vaKqNmkRAml",
+          "name": "Quattro"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "chat-api",
+        "instanceName": "LuminTech",
+        "numbers": "=55{{ $json.numero }}"
+      },
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        -32
+      ],
+      "id": "1775336f-7e00-41e1-8653-cc4845d2b041",
+      "name": "Verificar n mero no whats app",
+      "credentials": {
+        "evolutionApi": {
+          "id": "kTQQN6By6fYaxzCH",
+          "name": "Evolution account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d9c64469-d1f2-44f1-bb86-b7b7cd2e427b",
+              "leftValue": "={{ $json.data[0].exists }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        80,
+        -32
+      ],
+      "id": "16d9007e-ada4-4292-9dba-21bb21923008",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1Vhzmu0LonkzZAvAaP-UbYiqLqgy-nms2lgYi3K_jh14",
+          "mode": "list",
+          "cachedResultName": "Leads_Consignado",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Vhzmu0LonkzZAvAaP-UbYiqLqgy-nms2lgYi3K_jh14/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Página1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Vhzmu0LonkzZAvAaP-UbYiqLqgy-nms2lgYi3K_jh14/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "numero": "={{ $('Loop Over Items').item.json.numero }}",
+            "envio": "NUMERO INCORRETO"
+          },
+          "matchingColumns": [
+            "numero"
+          ],
+          "schema": [
+            {
+              "id": "nome",
+              "displayName": "nome",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "numero",
+              "displayName": "numero",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "envio",
+              "displayName": "envio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        304,
+        64
+      ],
+      "id": "add48c4c-35db-4a1d-ae45-aba849cfbe3e",
+      "name": "Update row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "s3WG0vaKqNmkRAml",
+          "name": "Quattro"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -816,
+        208
+      ],
+      "id": "a8d9ee7f-0f3a-4bd5-b009-98088f8f8e55",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Verificar n mero no whats app",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar texto": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verificar n mero no whats app": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Enviar texto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "485e2402-a8a4-4023-b522-f086d704d47f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "08f09d8285eb4e657d0b79affdfe8e7efc7425fbb78aece800cd26e4fe53c119"
+  },
+  "id": "W9rH6cd474jAj5u73Hxev",
+  "tags": []
+}
